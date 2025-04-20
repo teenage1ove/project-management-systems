@@ -61,7 +61,7 @@ export const ModalForm = ({
 						value: board.id,
 						label: board.name,
 					}))}
-					disabled={!!boardIdFromUrl}
+					disabled={!!boardIdFromUrl || mode === 'edit'}
 				/>
 			</Form.Item>
 			<Form.Item

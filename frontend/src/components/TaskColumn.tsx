@@ -9,12 +9,14 @@ interface TaskColumnProps {
 	title: string
 	status: Status
 	tasks: Task[]
+	onTaskClick: (task: Task) => void
 }
 
 export const TaskColumn: React.FC<TaskColumnProps> = ({
 	title,
 	status,
 	tasks,
+	onTaskClick,
 }) => {
 	const { setNodeRef } = useDroppable({
 		id: status,
@@ -27,7 +29,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({
 			ref={setNodeRef}
 		>
 			{tasks.map(task => (
-				<TaskCard key={task.id} task={task} />
+				<TaskCard onClick={() => onTaskClick(task)} key={task.id} task={task} />
 			))}
 		</Card>
 	)

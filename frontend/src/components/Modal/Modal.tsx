@@ -38,7 +38,7 @@ export function Modal({
 				? {
 						title: dataForm.title,
 						description: dataForm.description,
-						boardId: dataForm.boardId,
+						boardId: boardIdFromUrl || dataForm.boardId,
 						status: dataForm.status as Status,
 						priority: dataForm.priority as Priority,
 						assigneeId: dataForm.assignee.id,
@@ -52,32 +52,40 @@ export function Modal({
 
 	const handleSubmit = async () => {
 		try {
+			// Проверяем валидацию формы
 			const values = await form.validateFields()
 
-			if (mode === 'create') {
-				const taskData: CreateFormValues = {
-					assigneeId: values.assigneeId,
-					boardId: values.boardId,
-					description: values.description,
-					priority: values.priority,
-					title: values.title,
-				}
-				await createTask(taskData).unwrap()
-				message.success('Задача успешно создана')
-			} else {
-				const taskData: EditFormValues & { id: number } = {
-					...values,
-					id: dataForm!.id,
-				}
-				await updateTask(taskData).unwrap()
-				message.success('Задача успешно обновлена')
-			}
+			// Если валидация прошла успешно, только тогда отправляем запрос
+			if (values) {
+				console.log('Форма прошла валидацию, значения:', values)
 
-			setShowModal(false)
-			form.resetFields()
+				if (mode === 'create') {
+					const taskData: CreateFormValues = {
+						assigneeId: values.assigneeId,
+						boardId: values.boardId,
+						description: values.description,
+						priority: values.priority,
+						title: values.title,
+					}
+					await createTask(taskData).unwrap()
+					message.success('Задача успешно создана')
+				} else {
+					const taskData: EditFormValues & { id: number } = {
+						...values,
+						id: dataForm!.id,
+					}
+					await updateTask(taskData).unwrap()
+					message.success('Задача успешно обновлена')
+				}
+
+				// Закрываем модальное окно и сбрасываем форму
+				setShowModal(false)
+				form.resetFields()
+			}
 		} catch (error) {
-			message.error('Ошибка при сохранении задачи')
-			console.error('Ошибка при сохранении задачи:', error)
+			// Если валидация не прошла, показываем сообщение
+			message.error('Пожалуйста, заполните все обязательные поля')
+			console.error('Ошибка валидации формы:', error)
 		}
 	}
 
@@ -89,7 +97,7 @@ export function Modal({
 			footer={[
 				<Button
 					key='link'
-					style={{ display: mode === 'create' ? 'none' : 'inline' }}
+					style={{ display: mode === 'create' || id ? 'none' : 'inline' }}
 				>
 					<Link to={`${ApiRoutes.BOARD}/${dataForm?.boardId}`}>
 						Перейти на доску

@@ -1,15 +1,20 @@
 import { useDraggable } from '@dnd-kit/core'
-import { Card, Image, Space } from 'antd'
+import { Button, Card, Image, Space } from 'antd'
 import { Task } from '../api/api.types'
 
 interface TaskCardProps {
 	task: Task
+	onClick: () => void
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick }) => {
 	const { attributes, listeners, setNodeRef, transform } = useDraggable({
 		id: task.id.toString(),
 	})
+
+	const handleMouseDown = () => {
+		onClick()
+	}
 
 	const styleTransform = transform
 		? {
@@ -41,6 +46,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
 					<span style={{ marginLeft: '10px', opacity: '0.7' }}>
 						{task.assignee.fullName}
 					</span>
+					<Button type='primary' onMouseDown={handleMouseDown}>
+						Открыть
+					</Button>
 				</Space>
 			</Space>
 		</Card>

@@ -2,7 +2,7 @@ import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { Flex, Space, Typography, message } from 'antd'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Priority, Status } from '../api/api.types'
+import { Priority, Status, Task } from '../api/api.types'
 import { Modal } from '../components/Modal/Modal'
 import { TaskColumn } from '../components/TaskColumn'
 import { useGetBoardsQuery } from '../stores/boards-api'
@@ -19,6 +19,13 @@ export const BoardPage = () => {
 	const { data: boards } = useGetBoardsQuery()
 	const [updateTask] = useUpdateTaskMutation()
 	const [showModal, setShowModal] = useState(false)
+	const [showEditModal, setShowEditModal] = useState(false)
+	const [selectedTask, setSelectedTask] = useState<Task | null>(null)
+
+	const handleOpenEditModal = (task: Task) => {
+		setSelectedTask(task)
+		setShowEditModal(true)
+	}
 
 	function getBoard() {
 		return boards?.find(b => b.id === Number(id))
@@ -73,6 +80,7 @@ export const BoardPage = () => {
 				<Flex gap='middle' style={{ overflowX: 'auto', marginTop: '15px' }}>
 					{columns.map(column => (
 						<TaskColumn
+							onTaskClick={handleOpenEditModal}
 							key={column.status}
 							title={column.title}
 							status={column.status}
@@ -82,6 +90,14 @@ export const BoardPage = () => {
 				</Flex>
 			</Space>
 			<Modal mode='create' showModal={showModal} setShowModal={setShowModal} />
+			{selectedTask && (
+				<Modal
+					mode='edit'
+					dataForm={selectedTask}
+					showModal={showEditModal}
+					setShowModal={setShowEditModal}
+				/>
+			)}
 		</DndContext>
 	)
 }

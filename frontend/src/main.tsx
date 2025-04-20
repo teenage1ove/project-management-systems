@@ -6,10 +6,10 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { Layout } from './layouts/Layout.tsx'
 import { BoardPage } from './pages/BoardPage.tsx'
 import { BoardsPage } from './pages/BoardsPage.tsx'
+import { ErrorPage } from './pages/ErrorPage.tsx'
 import { IssuesPage } from './pages/IssuesPage.tsx'
 import { store } from './stores/root-store.ts'
 import './styles/index.css'
-import { ErrorPage } from './pages/ErrorPage.tsx'
 
 const router = createBrowserRouter([
 	{
