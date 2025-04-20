@@ -1,3 +1,4 @@
+import '@ant-design/v5-patch-for-react-19'
 import { ConfigProvider, theme } from 'antd'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
@@ -8,6 +9,7 @@ import { BoardsPage } from './pages/BoardsPage.tsx'
 import { IssuesPage } from './pages/IssuesPage.tsx'
 import { store } from './stores/root-store.ts'
 import './styles/index.css'
+import { ErrorPage } from './pages/ErrorPage.tsx'
 
 const router = createBrowserRouter([
 	{
@@ -31,6 +33,7 @@ const router = createBrowserRouter([
 				element: <IssuesPage />,
 			},
 		],
+		errorElement: <ErrorPage />,
 	},
 ])
 

@@ -1,8 +1,17 @@
 import { Layout as AntLayout, Button, Menu } from 'antd'
 import { Content, Header } from 'antd/es/layout/layout'
-import { Link, Outlet } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Modal } from '../components/Modal/Modal'
 
 export function Layout() {
+	const [showModal, setShowModal] = useState(false)
+	const { pathname } = useLocation()
+
+	// Определяем текущий маршрут для выделения пункта меню
+	const pagePathname = pathname.split('/')[1] as 'issues' | 'boards'
+	const selectedKey = pagePathname === 'issues' ? 'boards' : 'issues'
+
 	return (
 		<AntLayout style={{ minHeight: '100vh' }}>
 			<Header
@@ -19,7 +28,7 @@ export function Layout() {
 					style={{
 						background: 'transparent',
 					}}
-					defaultSelectedKeys={['boards']}
+					selectedKeys={[selectedKey]}
 					items={[
 						{
 							key: 'boards',
@@ -34,13 +43,20 @@ export function Layout() {
 						},
 					]}
 				/>
-				<Button type='primary' onClick={() => {}}>
+				<Button type='primary' onClick={() => setShowModal(true)}>
 					Создать задачу
 				</Button>
 			</Header>
 			<Content style={{ padding: '24px 50px' }}>
 				<Outlet />
 			</Content>
+			{showModal && (
+				<Modal
+					mode='create'
+					showModal={showModal}
+					setShowModal={setShowModal}
+				/>
+			)}
 		</AntLayout>
 	)
 }

@@ -3,7 +3,7 @@ import { Flex, Input, Space, Spin, TreeSelect } from 'antd'
 import { useMemo, useState } from 'react'
 import { Status } from '../api/api.types'
 import { ErrorMessage } from '../components/ErrorMessage'
-import { TasksList } from '../components/TasksList'
+import { ListItems } from '../components/ListItems'
 import { useDebounce } from '../hooks/useDebounce'
 import { useGetBoardsQuery } from '../stores/boards-api'
 import { useGetTasksQuery } from '../stores/tasks-api'
@@ -86,13 +86,14 @@ export function IssuesPage() {
 					placeholder='Фильтры'
 					style={{ minWidth: '300px', maxWidth: '800px' }}
 					multiple
+					showSearch={false}
 					showCheckedStrategy={TreeSelect.SHOW_CHILD}
 					onChange={handleFilterChange}
 					value={[...filters.status, ...filters.board]}
 					allowClear
 				/>
 			</Flex>
-			{filteredTasks && <TasksList tasks={filteredTasks} />}
+			{filteredTasks && <ListItems type='tasks' items={filteredTasks} />}
 		</Space>
 	)
 }

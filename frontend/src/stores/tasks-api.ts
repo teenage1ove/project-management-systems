@@ -1,40 +1,44 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ApiRoutes, BASE_URL } from '../api/api.routes'
-import { Task, TasksResponse } from '../api/api.types'
+import {
+	AddTaskRequest,
+	BoardIdResponse,
+	Task,
+	TasksResponse,
+	UpdateTaskRequest,
+} from '../api/api.types'
 
 export const tasksApi = createApi({
 	reducerPath: 'tasksApi',
 	baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-	tagTypes: ['Task'],
+	tagTypes: ['Tasks'],
 	endpoints: builder => ({
 		getTasks: builder.query<Task[], void>({
 			query: () => ApiRoutes.TASKS,
-			providesTags: ['Task'],
+			providesTags: ['Tasks'],
 			transformResponse: (response: TasksResponse) => response.data,
 		}),
-		createTask: builder.mutation<Task, Omit<Task, 'id'>>({
+		createTask: builder.mutation<Task, AddTaskRequest>({
 			query: newTask => ({
-				url: ApiRoutes.TASKS,
+				url: `${ApiRoutes.TASKS}/create`,
 				method: 'POST',
 				body: newTask,
 			}),
 
-			invalidatesTags: ['Task'],
+			invalidatesTags: ['Tasks'],
 		}),
-		updateTask: builder.mutation<Task, Task>({
+		updateTask: builder.mutation<Task, UpdateTaskRequest & { id: number }>({
 			query: updatedTask => ({
-				url: `${ApiRoutes.TASKS}/${updatedTask.id}`,
+				url: `${ApiRoutes.TASKS}/update/${updatedTask.id}`,
 				method: 'PUT',
 				body: updatedTask,
 			}),
-			invalidatesTags: ['Task'],
+			invalidatesTags: ['Tasks'],
 		}),
-		deleteTask: builder.mutation<void, number>({
-			query: taskId => ({
-				url: `${ApiRoutes.TASKS}/${taskId}`,
-				method: 'DELETE',
-			}),
-			invalidatesTags: ['Task'],
+		getTasksByBoardId: builder.query<Task[], string>({
+			query: id => `${ApiRoutes.BOARDS}/${id}`,
+			providesTags: ['Tasks'],
+			transformResponse: (response: BoardIdResponse) => response.data,
 		}),
 	}),
 })
@@ -43,5 +47,5 @@ export const {
 	useGetTasksQuery,
 	useCreateTaskMutation,
 	useUpdateTaskMutation,
-	useDeleteTaskMutation,
+	useGetTasksByBoardIdQuery,
 } = tasksApi

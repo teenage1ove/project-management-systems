@@ -2,7 +2,7 @@ import { Board, Status, Task } from '../api/api.types'
 
 interface Filters {
 	status: Status[]
-	board: number[] // Обновлено на number[]
+	board: number[] 
 }
 
 // Формирование treeData для TreeSelect
