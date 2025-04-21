@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import { Card, Typography } from 'antd'
 import { Status, Task } from '../api/api.types'
-import { TaskCard } from './TaskCard'
+import { TaskDragCard } from './TaskDragCard'
 
 const { Title } = Typography
 
@@ -29,7 +29,7 @@ export const TaskColumn: React.FC<TaskColumnProps> = ({
 			ref={setNodeRef}
 		>
 			{tasks.map(task => (
-				<TaskCard onClick={() => onTaskClick(task)} key={task.id} task={task} />
+				<TaskDragCard onClick={() => onTaskClick(task)} key={task.id} task={task} />
 			))}
 		</Card>
 	)

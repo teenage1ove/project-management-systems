@@ -7,7 +7,7 @@ interface TaskCardProps {
 	onClick: () => void
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task, onClick }) => {
+export const TaskDragCard: React.FC<TaskCardProps> = ({ task, onClick }) => {
 	const { attributes, listeners, setNodeRef, transform } = useDraggable({
 		id: task.id.toString(),
 	})
